@@ -1,0 +1,23 @@
+Traceback (most recent call last):
+  File "/Users/morganpiper/Documents/Coding/todo-list-thingy/main.py", line 20, in <module>
+    db.init_app(app)
+  File "/Users/morganpiper/Documents/Coding/todo-list-thingy/.env/lib/python3.12/site-packages/flask_sqlalchemy/extension.py", line 374, in init_app
+    engines[key] = self._make_engine(key, options, app)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/morganpiper/Documents/Coding/todo-list-thingy/.env/lib/python3.12/site-packages/flask_sqlalchemy/extension.py", line 665, in _make_engine
+    return sa.engine_from_config(options, prefix="")
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/morganpiper/Documents/Coding/todo-list-thingy/.env/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 820, in engine_from_config
+    return create_engine(url, **options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<string>", line 2, in create_engine
+  File "/Users/morganpiper/Documents/Coding/todo-list-thingy/.env/lib/python3.12/site-packages/sqlalchemy/util/deprecations.py", line 281, in warned
+    return fn(*args, **kwargs)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^
+  File "/Users/morganpiper/Documents/Coding/todo-list-thingy/.env/lib/python3.12/site-packages/sqlalchemy/engine/create.py", line 599, in create_engine
+    dbapi = dbapi_meth(**dbapi_args)
+            ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/morganpiper/Documents/Coding/todo-list-thingy/.env/lib/python3.12/site-packages/sqlalchemy/dialects/mysql/mysqldb.py", line 147, in import_dbapi
+    return __import__("MySQLdb")
+           ^^^^^^^^^^^^^^^^^^^^^
+ModuleNotFoundError: No module named 'MySQLdb'
