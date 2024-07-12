@@ -31,4 +31,16 @@ class LoginForm(FlaskForm):
     password = PasswordField('password', validators=[DataRequired()], render_kw={'placeholder': 'Password'})
     submit = SubmitField()
 
+class TodoList:
+    def __init__(self):
+        self.lists = {}
+    
+    def createlist(self, listname):
+        self.lists[listname] = []
+    
+    def addtolist(self, listname, item):
+        self.lists[listname] = [item]
+    
+    def listitems(self, listname):
+        print(self.lists[listname])
 
