@@ -9,21 +9,22 @@ from flask import (
 )
 from flask_login import (
     LoginManager, 
-    UserMixin, 
     login_required,
     current_user,
     logout_user,
     login_user
 )
+from classes import (
+    User,
+    Base,
+    RegisterForm,
+    LoginForm
+)
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 from argon2 import PasswordHasher
-
-class Base(DeclarativeBase):
-    pass
 
 # initiate some stuff for the app
 app = Flask(__name__)
@@ -38,31 +39,6 @@ db.init_app(app)
 # create the password hasher to hash the passwords. Uses argon2 hashing algorithim
 ph = PasswordHasher()
 
-# define the user database as a class for flask to handle interacting with the database
-# (adding/deleting users, checking passwords, emails etc)
-class User(Base, UserMixin):
-    __tablename__ = "users"
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    UserName: Mapped[str] = mapped_column(unique=True)
-    email: Mapped[str]
-    UserPassword: Mapped[str] = mapped_column(unique=True)
-
-# define the form for the user to use to create an account.
-class RegisterForm(FlaskForm):
-    name = StringField('name', validators=[DataRequired()], render_kw={'placeholder': 'Name'})
-    email = StringField('email', validators=[DataRequired()], render_kw={'placeholder': 'Email'})
-    password = PasswordField('password', validators=[DataRequired()], render_kw={'placeholder': 'Password'})
-    submit = SubmitField()
-
-# pretty much the same as the form defined above but for logging in.
-# we will use an email for checking if the person has an account, hence why there is no name field.
-class LoginForm(FlaskForm):
-    email = StringField('email', validators=[DataRequired()], render_kw={'placeholder': 'Email'})
-    password = PasswordField('password', validators=[DataRequired()], render_kw={'placeholder': 'Password'})
-    submit = SubmitField()
-
-# create a function for adding a user to the database
 # basically takes the users name, email and hashed password and enters it into the database
 def add_user_to_db(name, email, password):
     user = User(UserName=name, email=email, UserPassword=password)
@@ -96,16 +72,11 @@ def login():
             user = query_user_database(email)
             if ph.verify(user.UserPassword, password):
                 login_user(user)
-                print('user logged in')
-                return redirect(url_for('test'))
-            else:
-                print('Your entered the wrong password')
+                return redirect(url_for('index'))
         except Exception as e:
             print(e)
 
     return render_template('login.html', form=form)
-
-
 
 # define a route for the register page
 @app.route('/register', methods=['GET', 'POST'])
@@ -127,17 +98,17 @@ def register():
 
     return render_template('register.html', form=form)
 
-@app.route('/test')
-@login_required
-def test():
-    return f'Hello {current_user.UserName}!'
-
-# define a page for the logout page
+# uses flask login to pop the sessions to logout
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
+@app.route('/board')
+@login_required
+def boards():
+    return render_template('board.html')
 
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.
