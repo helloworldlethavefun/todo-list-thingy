@@ -1,0 +1,17 @@
+<html>
+  <head>
+    <title>Placeholder Name</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+  </head>
+  <body>
+    <h1>Create an account</h1>
+
+    <form method="post" action="">
+      {{ form.hidden_tag() }}
+      {{ form.name }}
+      {{ form.email }}
+      {{ form.password }}
+      {{ form.submit }}
+    </form>
+  </body>
+</html>
