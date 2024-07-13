@@ -3,6 +3,7 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
+import json
 
 class Base(DeclarativeBase):
     pass
@@ -32,15 +33,33 @@ class LoginForm(FlaskForm):
     submit = SubmitField()
 
 class TodoList:
-    def __init__(self):
+    def __init__(self, listname):
         self.lists = {}
+        self.filename = listname + '.json'
     
     def createlist(self, listname):
-        self.lists[listname] = []
+      self.lists[listname] = []
     
     def addtolist(self, listname, item):
-        self.lists[listname] = [item]
+        self.lists[listname].append(item)
     
     def listitems(self, listname):
         print(self.lists[listname])
 
+    def listsublists(self):
+        print(self.lists.keys())
+
+    def removeitem(self, listname, item):
+        if item in self.lists[listname]:
+            self.lists[listname].remove(item)
+
+    def savelisttofile(self):
+        jsonList = json.dumps(self.lists)
+        with open(self.filename, 'w') as file:
+            file.write(jsonList)
+            file.close
+
+    def loadlistfromfile(self):
+        with open(self.filename, 'r') as file:
+            jsonList = file.read()
+            self.lists = json.loads(jsonList)
