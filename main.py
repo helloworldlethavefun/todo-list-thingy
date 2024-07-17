@@ -5,7 +5,8 @@ from flask import (
     Flask,
     render_template,
     url_for,
-    redirect
+    redirect,
+    request
 )
 from flask_login import (
     LoginManager, 
@@ -18,7 +19,8 @@ from classes import (
     User,
     Base,
     RegisterForm,
-    LoginForm
+    LoginForm,
+    TodoList
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
@@ -38,6 +40,9 @@ db.init_app(app)
 
 # create the password hasher to hash the passwords. Uses argon2 hashing algorithim
 ph = PasswordHasher()
+
+def list_kanban_boards(user):
+    id = user
 
 # basically takes the users name, email and hashed password and enters it into the database
 def add_user_to_db(name, email, password):
@@ -109,6 +114,18 @@ def logout():
 @login_required
 def boards():
     return render_template('board.html')
+
+@app.route('/list-api/v1')
+def list_api_v1():
+    return 'This is where the apis live'
+
+@app.route('/list-api/v1/create-board', methods=['POST'])
+def create_board():
+    encoded_boardname = request.get_data()
+    boardname = encoded_boardname.decode('utf-8')
+    list = TodoList(boardname)
+    list.savelisttofile()
+    return 'List Successfully Created', 204
 
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.

@@ -3,7 +3,23 @@
   <head>
     <title>Placeholder Name</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-  </head>
+ </head>
   <body>
+    <h1>Kanban Boards</h1>
+    <button type="button" onclick="openPopup()">Create New Board</button>
+
+    <div class="popup-overlay" id="popup-overlay">
+      <div class="popup" id="boardname">
+        <span class="close" id="closePopup">&times;</span>
+        <div class="popup-content">
+          <p>Please enter a name for your board</p>
+          <input type="text" placeholder="Todo List" id="kanbanName">
+          <button onclick="submitName()">Create</button>
+        </div>
+      </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}">
+    </script>
   </body>
 </html>
