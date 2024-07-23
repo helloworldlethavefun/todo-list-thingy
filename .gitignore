@@ -2,3 +2,4 @@ push.sh
 .env
 __pycache__
 convertvideos.py
+*.json
