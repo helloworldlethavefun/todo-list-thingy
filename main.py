@@ -49,6 +49,7 @@ def add_user_to_db(name, email, password):
     user = User(UserName=name, email=email, UserPassword=password)
     db.session.add(user)
     db.session.commit()
+    os.mkdir(f'users/{user.id}')
 
 # query the database to see if the user exists
 def query_user_database(email):
@@ -58,11 +59,13 @@ def query_user_database(email):
 @login_manager.user_loader
 def load_user(user_id):
     user = db.get_or_404(User, int(user_id))
-    return user
+    print(user.id)
 
 # define the route for the index page
 @app.route('/')
 def index():
+    if current_user.is_authenticated:
+        print(current_user.UserName)
     return render_template('index.html')
 
 # define the route for the login page
@@ -76,7 +79,12 @@ def login():
         try:
             user = query_user_database(email)
             if ph.verify(user.UserPassword, password):
-                login_user(user)
+                if form.remember.data == "['Remember Me?']":
+                    print('remembered')
+                    login_user(user, remember=True)
+                else:
+                    login_user(user)
+                    print('not remembered')
                 return redirect(url_for('index'))
         except Exception as e:
             print(e)
@@ -100,7 +108,6 @@ def register():
         add_user_to_db(name, email, password)
 
         return redirect(url_for('login'))
-
     return render_template('register.html', form=form)
 
 # uses flask login to pop the sessions to logout
@@ -124,8 +131,12 @@ def create_board():
     encoded_boardname = request.get_data()
     boardname = encoded_boardname.decode('utf-8')
     list = TodoList(boardname)
-    list.savelisttofile()
-    return 'List Successfully Created', 204
+    try:
+        list.savelisttofile()
+        return 'List Successfully Created', 204
+    except Exception as e:
+        print(e)
+        abort(500)
 
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.

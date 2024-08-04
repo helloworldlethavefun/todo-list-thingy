@@ -6,5 +6,8 @@
   </head>
   <body>
     <h1>TaskMate!</h1>
+    {% if current_user.is_authenticated %}
+      <h2>Welcome {{ current_user.UserName }}</h2>
+    {% endif %}
   </body>
 </html>

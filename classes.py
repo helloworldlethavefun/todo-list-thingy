@@ -1,12 +1,18 @@
 from flask_login import UserMixin
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
+from wtforms import widgets, StringField, PasswordField, SubmitField, SelectMultipleField
 from wtforms.validators import DataRequired
 import json
 
+choices = ['Remember Me?']
+
 class Base(DeclarativeBase):
     pass
+
+class MultiCheckboxField(SelectMultipleField):
+    widget = widgets.ListWidget(prefix_label=False)
+    option_widget = widgets.CheckboxInput()
 
 # define the user database as a class for flask to handle interacting with the database
 # (adding/deleting users, checking passwords, emails etc)
@@ -30,6 +36,7 @@ class RegisterForm(FlaskForm):
 class LoginForm(FlaskForm):
     email = StringField('email', validators=[DataRequired()], render_kw={'placeholder': 'Email'})
     password = PasswordField('password', validators=[DataRequired()], render_kw={'placeholder': 'Password'})
+    remember = MultiCheckboxField('remember_me', choices=choices)
     submit = SubmitField()
 
 class TodoList:
@@ -60,7 +67,10 @@ class TodoList:
 
     def savelisttofile(self):
         jsonList = json.dumps(self.lists)
-        with open(self.filename, 'w') as file:
+        user_id = user.id
+        user_directory = f'users/{user_id}'
+        file_path = os.path.join(user_directory, self.filename)
+        with open(file_path, 'w') as file:
             file.write(jsonList)
             file.close
 
