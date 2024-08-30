@@ -1,6 +1,11 @@
 // Main Javascript File
 
-
+// Just fetch some of the stuff from the html page so this file can manipulate them
+const popupOverlay = document.getElementById('popup-overlay');
+const popup = document.getElementById('popup');
+const closePopup = document.getElementById('closePopup');
+const emailInput = document.getElementById('kanbanName');
+let selectedList = "";
 // fucntion used to create a kanban board
 // use ajax async reqeusts to send the listname to the api endpoint
 function createboard(kanbanName) {
@@ -8,23 +13,34 @@ function createboard(kanbanName) {
   xhttp.onreadystatechange = function() {
     if (this.status == 204) {
       console.log('request sent');
+      window.location.reload();
     }
   };
   xhttp.open("POST", "/list-api/v1/create-board", true);
   xhttp.setRequestHeader("Content-type", "text/plain");
-  xhttp.send(kanbanName)
+  xhttp.send(kanbanName);
 }
 
-// Just fetch some of the stuff from the html page so this file can manipulate them
-const popupOverlay = document.getElementById('popup-overlay');
-const popup = document.getElementById('popup');
-const closePopup = document.getElementById('closePopup');
-const emailInput = document.getElementById('kanbanName');
+function selectTheList(id) {
+  selectedList = id;
+  console.log(selectedList);
+};
+
+function createBoardList(listname) {
+  const list = document.createElement('div');
+  // list.id = listname;
+  console.log(listname);
+};
 
 // Function to open the popup
 function openPopup() {
     popupOverlay.style.display = 'block';
-}
+};
+
+
+//function openListPopup() {
+//    popup-overlay-list.style.display = 'block';
+//};
 
 // Function to close the popup
 function closePopupFunc() {
@@ -48,3 +64,20 @@ function submitName() {
     closePopupFunc();
 }
 
+function makeApiRequest(url, requestType, header=null content=null) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function() {
+          if (this.status == 204) {
+            console.log('Request success, 204')
+          }
+        };
+        xhttp.open(requestType, 'http://127.0.0.1' + url, true);
+        if (headers != null) {
+          xhttp.setRequestHeader("Content-Type", "text/plain");
+        };
+        if (content == null) {
+          xhttp.send()
+        }; else {
+          xhttp.send(content)
+        };
+      };

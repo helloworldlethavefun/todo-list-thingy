@@ -47,3 +47,14 @@
     cursor: pointer;
     font-size: 16px;
 }
+
+/* Kanban Board Elements */
+
+.board-container {
+  border: solid black 2px;
+  height: 100vh;
+}
+
+.list-container {
+  border: solid black 2px;
+}

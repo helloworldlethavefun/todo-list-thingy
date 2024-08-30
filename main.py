@@ -6,7 +6,8 @@ from flask import (
     render_template,
     url_for,
     redirect,
-    request
+    request,
+    abort
 )
 from flask_login import (
     LoginManager, 
@@ -33,7 +34,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(12).hex()
 login_manager = LoginManager()
 login_manager.init_app(app)
-#login_manager.login_view = 'login'
 db = SQLAlchemy(model_class=Base)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://Flask@localhost/users'
 db.init_app(app)
@@ -59,32 +59,34 @@ def query_user_database(email):
 @login_manager.user_loader
 def load_user(user_id):
     user = db.get_or_404(User, int(user_id))
-    print(user.id)
+    return user
 
 # define the route for the index page
 @app.route('/')
 def index():
-    if current_user.is_authenticated:
-        print(current_user.UserName)
     return render_template('index.html')
 
 # define the route for the login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    # grab the login form
     form = LoginForm()
 
     if form.validate_on_submit():
+        # store the form data in some variables
         email = form.email.data
         password = form.password.data
+        remember = form.remember.data
+
+        # try to query the user database for the user
+        # if that user exists then check the users password hash against the 
+        # entered password
+        # if that succeeds login the user
+        # if something goes wrong print the error, will add an abort 500 later
         try:
             user = query_user_database(email)
             if ph.verify(user.UserPassword, password):
-                if form.remember.data == "['Remember Me?']":
-                    print('remembered')
-                    login_user(user, remember=True)
-                else:
-                    login_user(user)
-                    print('not remembered')
+                login_user(user, remember=remember)
                 return redirect(url_for('index'))
         except Exception as e:
             print(e)
@@ -120,7 +122,10 @@ def logout():
 @app.route('/board')
 @login_required
 def boards():
-    return render_template('board.html')
+    user_id = current_user.id
+    path = f'users/{user_id}'
+    lists = os.listdir(path)
+    return render_template('board.html', lists=lists)
 
 @app.route('/list-api/v1')
 def list_api_v1():
@@ -128,15 +133,20 @@ def list_api_v1():
 
 @app.route('/list-api/v1/create-board', methods=['POST'])
 def create_board():
+    user_id = current_user.id
     encoded_boardname = request.get_data()
     boardname = encoded_boardname.decode('utf-8')
     list = TodoList(boardname)
     try:
-        list.savelisttofile()
+        list.savelisttofile(user_id)
         return 'List Successfully Created', 204
     except Exception as e:
         print(e)
         abort(500)
+
+@app.route('/list-api/v1/create-list', methods=['POST'])
+def create_list():
+    pass
 
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.
