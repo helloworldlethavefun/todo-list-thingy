@@ -182,6 +182,16 @@ def getlist():
     lists = json.dumps(lists)
     return lists, 200
 
+@app.route('/list-api/v1/removeitem', methods=['POST'])
+def remitem():
+    data = request.get_json()
+    list = TodoList(data['SelectedList'])
+    list.loadlistfromfile(data['UserId'])
+    list.removeitem(data['currentList'], data['item'])
+    list.savelisttofile(data['UserId'])
+    return 'success', 204
+
+
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.
 if __name__ == '__main__':

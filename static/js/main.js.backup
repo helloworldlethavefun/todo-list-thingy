@@ -9,36 +9,29 @@ const listPopup = document.getElementById('popup-overlay-list');
 const closeListPopup = document.getElementById('closeListPopup');
 let selectedList = "";
 
-let isModalOpen = false; // Track whether a modal is open
+const dragElement = (element) => {
+    let mouseX = 0, mouseY = 0, elementX = 0, elementY = 0;
 
-// Function to drag the container
-const dragElement = (element, container) => {
-  let posX = 0, posY = 0, mouseX = 0, mouseY = 0;
+    element.onmousedown = dragMouseDown;
 
-  element.onmousedown = dragMouseDown;
+    function dragMouseDown(e) {
+        if (e.target.tagName.toLowerCase() === 'p') {
+          e.stopPropagation();  // Stop the drag on child elements (p tags)
+          return;  // Don't drag the container if p tag is clicked
+        }
 
-  function dragMouseDown(e) {
-    if (isModalOpen) {
-      return; // Disable dragging when modal is open
-    }
+        e.preventDefault();
+        // Get the mouse cursor position at startup
+        mouseX = e.clientX;
+        mouseY = e.clientY;
 
-    if (e.target.tagName.toLowerCase() === 'p') {
-      e.stopPropagation();  // Stop the drag on child elements (p tags)
-      return;  // Don't drag the container if p tag is clicked
-    }
+        // Get the initial position of the element
+        elementX = element.offsetLeft;
+        elementY = element.offsetTop;
 
-      e.preventDefault();
-      // Get the mouse cursor position at startup
-      mouseX = e.clientX;
-      mouseY = e.clientY;
-
-      // Get the initial position of the element
-      elementX = element.offsetLeft;
-      elementY = element.offsetTop;
-
-      // Attach event listeners for mousemove and mouseup
-      document.onmouseup = closeDragElement;
-      document.onmousemove = elementDrag;
+        // Attach event listeners for mousemove and mouseup
+        document.onmouseup = closeDragElement;
+        document.onmousemove = elementDrag;
     }
 
     function elementDrag(e) {
@@ -59,6 +52,8 @@ const dragElement = (element, container) => {
         document.onmousemove = null;
     }
 };
+
+
 
 function allowDrop(ev) {
   ev.preventDefault();
@@ -286,13 +281,11 @@ function createBoardList() {
 // Function to open the popup
 function openPopup() {
     document.getElementById('popup-overlay').style.display = 'block';
-    isModalOpen = true;
 };
 
 // open the popup for creating a new list
 function openListPopup() {
     document.getElementById('popup-overlay-list').style.display = 'block';
-    isModalOpen = true;
 }
 
 let currentListId = null;
@@ -301,25 +294,21 @@ function openItemPopup(listId) {
   console.log(listId);
   currentListId = listId;  // Store the ID of the list to which the new item will be added
   document.getElementById('popup-overlay-item').style.display = 'block';
-  isModalOpen = true;
 }
 
 // Function to close the popup
 function closePopupFunc() {
     document.getElementById('popup-overlay').style.display = 'none';
-    isModalOpen = false;
 }
 
 // close the popup after creating list
 function closeListPopupFunc() {
     document.getElementById('popup-overlay-list').style.display = 'none';
-    isModalOpen = false;
 }
 
 // close the popup after adding an item to the list
 function closeItemPopupFunc() {
   document.getElementById('popup-overlay-item').style.display = 'none';
-  isModalOpen = false;
 }
 
 // Take the name the user submitted then create that todolist file
