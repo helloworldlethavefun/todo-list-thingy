@@ -39,7 +39,7 @@ class LoginForm(FlaskForm):
 class TodoList:
     def __init__(self, parentlistname):
         self.lists = {}
-        self.filename = parentlistname + '.json'
+        self.filename = parentlistname
     
     def createlist(self, listname):
       self.lists[listname] = []
@@ -52,6 +52,7 @@ class TodoList:
 
     def listsublists(self):
         print(self.lists.keys())
+        return self.lists
 
     def removeitem(self, listname, item):
         if item in self.lists[listname]:
@@ -70,7 +71,9 @@ class TodoList:
             file.write(jsonList)
             file.close
 
-    def loadlistfromfile(self):
-        with open(self.filename, 'r') as file:
+    def loadlistfromfile(self, user_id):
+        user_path = f'users/{user_id}'
+        file_path = os.path.join(user_path, self.filename)
+        with open(file_path, 'r') as file:
             jsonList = file.read()
             self.lists = json.loads(jsonList)

@@ -25,9 +25,12 @@ from classes import (
 )
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
+from flask_cors import CORS
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import DataRequired
 from argon2 import PasswordHasher
+import json
+import ast
 
 # initiate some stuff for the app
 app = Flask(__name__)
@@ -37,6 +40,8 @@ login_manager.init_app(app)
 db = SQLAlchemy(model_class=Base)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://Flask@localhost/users'
 db.init_app(app)
+CORS(app)
+
 
 # create the password hasher to hash the passwords. Uses argon2 hashing algorithim
 ph = PasswordHasher()
@@ -125,7 +130,7 @@ def boards():
     user_id = current_user.id
     path = f'users/{user_id}'
     lists = os.listdir(path)
-    return render_template('board.html', lists=lists)
+    return render_template('board.html', lists=lists, user_id=current_user.id)
 
 @app.route('/list-api/v1')
 def list_api_v1():
@@ -133,7 +138,8 @@ def list_api_v1():
 
 @app.route('/list-api/v1/create-board', methods=['POST'])
 def create_board():
-    user_id = current_user.id
+    if current_user.is_authenticated == True:
+        user_id = current_user.id
     encoded_boardname = request.get_data()
     boardname = encoded_boardname.decode('utf-8')
     list = TodoList(boardname)
@@ -146,7 +152,35 @@ def create_board():
 
 @app.route('/list-api/v1/create-list', methods=['POST'])
 def create_list():
-    pass
+    try:
+        data = request.get_json()
+        list = TodoList(data['SelectedList'])
+        list.loadlistfromfile(data['UserId'])
+        list.createlist(data['ListName'])
+        list.savelisttofile(data['UserId'])
+        return 'success', 204
+    except Exception as e:
+        print(e)
+        return 'failed', 500
+
+@app.route('/list-api/v1/additem', methods=['POST'])
+def additem():
+    data = request.get_json()
+    list = TodoList(data['SelectedList'])
+    list.loadlistfromfile(data['UserId'])
+    list.additem(data['currentList'], data['item'])
+    list.savelisttofile(data['UserId'])
+    return 'success', 204
+
+@app.route('/list-api/v1/get-list', methods=['POST'])
+def getlist():
+    liststuff = request.get_data().decode('utf-8')
+    liststuff = ast.literal_eval(liststuff)
+    list = TodoList(liststuff[0])
+    list.loadlistfromfile(liststuff[1])
+    lists = list.listsublists()
+    lists = json.dumps(lists)
+    return lists, 200
 
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.
