@@ -1,4 +1,4 @@
-// Main Javascript File
+// Main Javascript File for the kanban board
 
 // Just fetch some of the stuff from the html page so this file can manipulate them
 const popupOverlay = document.getElementById('popup-overlay');
@@ -9,7 +9,7 @@ const listPopup = document.getElementById('popup-overlay-list');
 const closeListPopup = document.getElementById('closeListPopup');
 let selectedList = "";
 
-let isModalOpen = false; // Track whether a modal is open
+let isModalOpen = false;
 
 // Function to drag the container
 const dragElement = (element, container) => {
@@ -19,24 +19,21 @@ const dragElement = (element, container) => {
 
   function dragMouseDown(e) {
     if (isModalOpen) {
-      return; // Disable dragging when modal is open
+      return;
     }
 
     if (e.target.tagName.toLowerCase() === 'p') {
-      e.stopPropagation();  // Stop the drag on child elements (p tags)
-      return;  // Don't drag the container if p tag is clicked
+      e.stopPropagation();
+      return;
     }
 
       e.preventDefault();
-      // Get the mouse cursor position at startup
       mouseX = e.clientX;
       mouseY = e.clientY;
 
-      // Get the initial position of the element
       elementX = element.offsetLeft;
       elementY = element.offsetTop;
 
-      // Attach event listeners for mousemove and mouseup
       document.onmouseup = closeDragElement;
       document.onmousemove = elementDrag;
     }
@@ -44,17 +41,14 @@ const dragElement = (element, container) => {
     function elementDrag(e) {
         e.preventDefault();
 
-        // Calculate the new position by comparing initial mouse position with current mouse position
         const deltaX = e.clientX - mouseX;
         const deltaY = e.clientY - mouseY;
 
-        // Update the element's position
         element.style.left = (elementX + deltaX) + "px";
         element.style.top = (elementY + deltaY) + "px";
     }
 
     function closeDragElement() {
-        // Stop moving when mouse button is released
         document.onmouseup = null;
         document.onmousemove = null;
     }
@@ -76,7 +70,6 @@ function drop(ev) {
 }
 
   function closeDragElement() {
-    // stop moving when mouse button is released:
     document.onmouseup = null;
     document.onmousemove = null;
   }
@@ -88,25 +81,19 @@ function createElement({
     attributes = {}, 
     children = [] 
 }) {
-    // Create the main element (e.g., div, p, h1, etc.)
     const element = document.createElement(tagName);
     
-    // Set the id and class if provided
     if (id) element.id = id;
     if (className) element.className = className;
 
-    // Set any additional attributes
     for (let key in attributes) {
         element.setAttribute(key, attributes[key]);
     }
 
-    // Append child elements
     children.forEach(child => {
         if (typeof child === 'string') {
-            // If child is text, create a text node
             element.appendChild(document.createTextNode(child));
         } else if (child instanceof HTMLElement) {
-            // If child is an element, append it
             element.appendChild(child);
         }
     });
@@ -186,7 +173,8 @@ function loadListFromPython() {
       const headerElement = createElement({
           tagName: 'h2',
           className: 'header',
-          children: [listName]
+          attributes: {style: 'cursor: move;'},
+          children: [listName, ' ', createElement({tagName: 'button', id: 'destroybutton', attributes: {onclick: 'destroyElement(this.parentNode.parentNode)'}, children: ['x']})]
       });
       listElement.appendChild(headerElement); // Append header to the list
       // Loop through items in the list
@@ -254,6 +242,7 @@ function createBoardList() {
       tagName: 'div',
       id: 'header',
       className: 'header',
+      attributes: {style: 'cursor: move;'},
       children: [
         createElement({
           tagName: 'h2',

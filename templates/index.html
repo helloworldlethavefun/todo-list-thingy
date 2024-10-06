@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
   </head>
   <body>
-    <h1>TaskMate!</h1>
+    <h1>Welcome to TaskMate!</h1>
     {% if current_user.is_authenticated %}
       <h2>Welcome {{ current_user.UserName }}</h2>
     {% endif %}
@@ -14,8 +14,10 @@
       <li><a href='/login'>Login</a></li>
       <li><a href='/register'>Register</a></li>
       {% if current_user.is_authenticated %}
-      <li><a href='/board'>Board</a></li>
-      {% endif%}
+      <li><a href='/board'>Board</a></li>          
+    {% endif %}
     </ul>
+    <h2>What is TaskMate?</h2>
+    <p>TaskMate is a free and open source todo list application written in python. The goal of the project is to provide a premium feeling todo list application, without the paywalls that others provide. I am hosting this online but I have also provided the project up on github for free download and the ability to host the application yourself if you wish and also allows you to modify and customize to your hearts content (provided you understand what you are doing :) )</p>
   </body>
 </html>
