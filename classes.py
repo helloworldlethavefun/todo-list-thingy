@@ -58,6 +58,9 @@ class TodoList:
         if item in self.lists[listname]:
             self.lists[listname].remove(item)
 
+    def removelist(self, listname):
+        self.lists.pop(listname)
+
     def moveitem(self, list1, item, list2):
         if item in self.lists[list1]:
             self.lists[list2].append(item)

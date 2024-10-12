@@ -23,11 +23,11 @@
         </ul>
     </div>
     
-    <div id='boards_list'>  
-    <ul class="button-container">
+    <div id='boards_list' class="board-list">  
+      <ul class="button-container">
         {% for list in lists %}
         <li>
-          <button id="{{list}}" onclick="selectTheList(this.id)">{{list}}</button>
+          <button class="board-button" id="{{list}}" onclick="selectTheList(this.id)">{{list}}</button>
         </li>
         {% endfor %}
         <li><button type="button" onclick="openPopup()">Create New Board</button></li>

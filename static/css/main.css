@@ -1,0 +1,6 @@
+/* The main css file for non board pages */
+
+.dark-mode {
+	background-color: #404040;
+	color: white;
+}

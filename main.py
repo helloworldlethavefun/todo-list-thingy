@@ -182,15 +182,21 @@ def getlist():
     lists = json.dumps(lists)
     return lists, 200
 
-@app.route('/list-api/v1/removeitem', methods=['POST'])
-def remitem():
+@app.route('/list-api/v1/removelist', methods=['POST'])
+def remlist():
     data = request.get_json()
     list = TodoList(data['SelectedList'])
     list.loadlistfromfile(data['UserId'])
-    list.removeitem(data['currentList'], data['item'])
+    list.removelist(data['listToDestroy'])
     list.savelisttofile(data['UserId'])
     return 'success', 204
 
+@app.route('/list-api/v1/deleteboard', methods=['POST'])
+def deleteboard():
+    data = request.get_json()
+    file = f'users/{data['UserId']}/{data['SelectedList']}'
+    os.remove(file)
+    return 'success', 204
 
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.

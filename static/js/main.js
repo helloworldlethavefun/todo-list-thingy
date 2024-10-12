@@ -8,7 +8,6 @@ const emailInput = document.getElementById('kanbanName');
 const listPopup = document.getElementById('popup-overlay-list');
 const closeListPopup = document.getElementById('closeListPopup');
 let selectedList = "";
-
 let isModalOpen = false;
 
 // Function to drag the container
@@ -110,6 +109,31 @@ function createboard(kanbanName) {
     if (this.status == 204) {
       console.log('request sent');
       window.location.reload();
+      const boardContainer = document.getElementById('board-container');
+      boardContainer.innerHTML = "";
+
+      const newListButton = createElement({
+        tagName: 'button',
+        id: 'newList',
+        className: 'newList',
+        attributes: {onclick: 'openListPopup()', style: 'position: absolute;'},
+        children: ['New List']
+      });
+
+      const deleteBoard = createElement({
+        tagName: 'button',
+        id: 'deleteBoardButton',
+        attributes: {onclick: 'destroyBoard(selectedList)'},
+        children: ['Delete Board']
+      });
+
+      const breakelement = createElement({
+        tagName: 'br'
+      });
+
+    boardContainer.appendChild(newListButton);
+    boardContainer.appendChild(breakelement);
+    boardContainer.appendChild(deleteBoard);
     }
   };
   xhttp.open("POST", "/list-api/v1/create-board", true);
@@ -130,10 +154,26 @@ function destroyElement(element, parent) {
   const anotherthing = element.parentElement.id;
   const item = element.id;
   const userid = document.getElementById('user_id').value;
-  console.log(item, anotherthing, userid)
+  console.log(anotherthing);
   json_data = {SelectedList: selectedList, currentList: anotherthing, UserId: userid, item: item};
   makeApiRequest('/list-api/v1/removeitem', 'POST', 'application/json', json_data);
   element.remove();
+}
+
+function destroyList(element) {
+  const list = element.id;
+  const userid = document.getElementById('user_id').value;
+  console.log(list);
+  json_data = {SelectedList: selectedList, listToDestroy: list, UserId: userid};
+  makeApiRequest('/list-api/v1/removelist', 'POST', 'application/json', json_data);
+  element.remove();
+}
+
+function destroyBoard() {
+  const userid = document.getElementById('user_id').value;
+  json_data = {SelectedList: selectedList, UserId: userid};
+  makeApiRequest('/list-api/v1/deleteboard', 'POST', 'application/json', json_data);
+  window.location.reload();
 }
 
 function loadListFromPython() {
@@ -153,7 +193,20 @@ function loadListFromPython() {
       children: ['New List']
     });
 
+    const deleteBoard = createElement({
+      tagName: 'button',
+      id: 'deleteBoardButton',
+      attributes: {onclick: 'destroyBoard(selectedList)'},
+      children: ['Delete Board']
+    });
+
+    const breakelement = createElement({
+      tagName: 'br',
+    });
+
     boardContainer.appendChild(newListButton);
+    boardContainer.appendChild(breakelement);
+    boardContainer.appendChild(deleteBoard);
       
     // Loop through the Kanban board object
     Object.entries(lists).forEach(([listName, items]) => {
@@ -174,7 +227,7 @@ function loadListFromPython() {
           tagName: 'h2',
           className: 'header',
           attributes: {style: 'cursor: move;'},
-          children: [listName, ' ', createElement({tagName: 'button', id: 'destroybutton', attributes: {onclick: 'destroyElement(this.parentNode.parentNode)'}, children: ['x']})]
+          children: [listName, ' ', createElement({tagName: 'button', id: 'destroybutton', attributes: {onclick: 'destroyList(this.parentElement.parentElement)'}, children: ['x']})]
       });
       listElement.appendChild(headerElement); // Append header to the list
       // Loop through items in the list
@@ -232,28 +285,18 @@ function createBoardList() {
   const list = createElement({
     tagName: 'div',
     id: listInput,
-    className: 'list-container draggable',
+    className: 'list-container',
     attributes: {
       ondragover: 'allowDrop(event)',
-      ondrop: 'drop(event)'
+      ondrop: 'drop(event)',
+      style: 'position: absolute; border: solid black 2px;'  // Ensure absolute positioning
     },
     children: [
       createElement({
-      tagName: 'div',
-      id: 'header',
+      tagName: 'h2',
       className: 'header',
       attributes: {style: 'cursor: move;'},
-      children: [
-        createElement({
-          tagName: 'h2',
-          children: [listInput]
-        })
-      ]
-    }),
-    createElement({
-      tagName: 'div',
-      id: 'listItems',
-      class: 'listItems',
+      children: [listInput, ' ', createElement({tagName: 'button', id: 'destroybutton', attributes: {onclick: 'destroyList(this.parentElement.parentElement)'}, children: ['x']})]
     }),
     createElement({
       tagName: 'button',
@@ -263,10 +306,10 @@ function createBoardList() {
       children: ['New Item']
     })
     ]
-    
-  })
+  });
   
   boardContainer.appendChild(list);
+  dragElement(list);
   closeListPopupFunc();
   json_data = {ListName: listInput, SelectedList: selectedList, UserId: userid};
   makeApiRequest('/list-api/v1/create-list', 'POST', "application/json", json_data);
@@ -314,6 +357,8 @@ function closeItemPopupFunc() {
 // Take the name the user submitted then create that todolist file
 function submitName() {
     const name = kanbanName.value;
+    selectedList = name;
+    const boardContainer = document.getElementById('board-container');
     createboard(name);
     closePopupFunc();
 }
@@ -352,7 +397,6 @@ async function makeApiRequest(url, requestType = 'GET', contentType = null, cont
         }
     });
 }
-
 
 // allows dropping on an element
 function allowDrop(ev) {
