@@ -4,6 +4,7 @@
     <!-- standard stuff for head -->
     <title>Placeholder Name</title>
     <script type="text/javascript" src="static/js/main.js"></script>
+    <script type="text/javascript" src="static/js/extra.js"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/board.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.slim.min.js"></script>
@@ -76,7 +77,7 @@
 
     <script>
       const darkmode = localStorage.getItem('darkmode');
-      const boardContainer = document.getElementById('boardContainer');
+      const boardContainer = document.getElementById('board-container');
       if (darkmode == 'false') {
         boardContainer.className == "board-container";
       }
