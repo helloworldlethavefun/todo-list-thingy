@@ -202,7 +202,7 @@ def deleteboard():
 def send_reminder():
     data = request.get_json()
     with open('/home/MorganPiper/test.txt', 'w') as file:
-        file.write(data)
+        file.write(str(data)
         file.close()
     return 'successfully recieved', 200
 
