@@ -193,16 +193,18 @@ def remlist():
 
 @app.route('/list-api/v1/deleteboard', methods=['POST'])
 def deleteboard():
-    data = request.get_json()
+    data = request.get_json().decode('utf-8')
     file = f"users/{data['UserId']}/{data['SelectedList']}"
     os.remove(file)
     return 'success', 204
 
 @app.route('/list-api/v1/remind', methods=['POST'])
 def send_reminder():
-    data = request.get_json
-    print(data)
-    return 'successfully recieved', 204
+    data = request.get_json()
+    with open('/home/MorganPiper/test.txt', 'w') as file:
+        file.write(data)
+        file.close()
+    return 'successfully recieved', 200
 
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.
