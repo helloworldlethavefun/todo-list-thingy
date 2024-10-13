@@ -5,11 +5,11 @@
 function toggledark() {
 	if (document.body.className == 'dark-mode') {
 		document.body.className = "";
-		localStorage.setItem('darkmode', False)
+		localStorage.setItem('darkmode', False);
 	}
 
 	else {
 		document.body.className = "dark-mode";
-		localStorage.setItem('darkmode', True)
+		localStorage.setItem('darkmode', True);
 	}
 }
