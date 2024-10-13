@@ -19,5 +19,17 @@
       {{ form.remember }} <br><br>
       {{ form.submit }}
     </form>
+
+    <button onclick="toggledark()">Toggle Dark Mode!</button>
+
+    <script>
+      const darkmode = localStorage.getItem('darkmode');
+      if (darkmode == 'false') {
+        document.body.className == "";
+      }
+      else if (darkmode == 'true') {
+        document.body.className = "dark-mode";
+      }
+    </script>
   </body>
 </html>
