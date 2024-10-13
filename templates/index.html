@@ -21,6 +21,15 @@
           "wdth" 100;
       }
     </style>
+    <script>
+      const darkmode = localStorage.getItem('darkmode');
+      if (darkmode == False) {
+        document.body.className == "";
+      }
+      else {
+        document.body.className == "dark-mode";
+      }
+    </script>
   </head>
   <body class="">
     <h1>Welcome to TaskMate!</h1>
