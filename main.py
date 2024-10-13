@@ -198,6 +198,12 @@ def deleteboard():
     os.remove(file)
     return 'success', 204
 
+@app.route('/list-api/v1/remind', methods=['POST'])
+def send_reminder():
+    data = request.get_json
+    print(data)
+    return 'successfully recieved', 204
+
 # checks that this isn't trying to be called from another file
 # and runs the Flask application.
 if __name__ == '__main__':
