@@ -1,3 +1,4 @@
+
 /* Main stylesheet file for the kanban board */
 .popup-overlay {
     display: none;
@@ -74,10 +75,10 @@
 
 .board-container {
     position: absolute;
-    top: 150px; /* Same as the height of .user_area */
+    top: 30vh;
     left: 0;
     width: 100%;
-    height: calc(100% - 150px); /* Fill the remaining space */
+    height: 80vh;
     border: 2px dashed #ccc;
     background-color: #f8f8f8; /* Light background to distinguish the area */
     box-sizing: border-box; /* Ensure the border doesn't affect sizing */
@@ -105,16 +106,14 @@
 
 div {
     display: inline-block;
-    /* padding: 10px; */
 }
-
 
 .user_area {
     position: absolute;
     top: 0;
     left: 0;
     width: 20%;
-    height: 150px; /* Adjust height as needed */
+    height: 30vh; /* Adjust height as needed */
     border: 2px solid black;
     background-color: #BEADFA;
     z-index: 2; /* Ensure it stays above the board area */
@@ -122,14 +121,16 @@ div {
 
 .board-list {
     margin: 0;
-    padding: 10px; /* Adjust padding as needed */
+    padding-top: 6%; /* Adjust padding as needed */
+    padding-left: 5%;
     background-color: #FFF8C9;
     position: absolute;
     top: 0;
     left: 20%; /* Adjust based on the width of .user_area */
     width: 80%; /* Adjust width based on .user_area */
-    height: 150px; /* Match the height of .user_area */
+    height: 50vh; /* Match the height of .user_area */
     box-sizing: border-box; /* Include padding in the width/height */
+    gap: 3%;
 }
 
 .button-container li {
@@ -147,4 +148,10 @@ div {
 .board-button {
     border: 1px solid black;
     background-color: transparent;
+    padding: 5%;
+}
+
+.link-button {
+    border: 1px solid black;
+    background-color: white;
 }
