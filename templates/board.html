@@ -20,6 +20,8 @@
         <ul>
             <li><a href='/'>Home</a></li>
             <li><a href='/logout'>Logout</a></li>
+            <button onclick="toggledark()">Toggle Dark Mode!</button>
+
 
         </ul>
     </div>
@@ -72,15 +74,14 @@
       <button onclick="openListPopup()">New List</button>
     </div>
 
-    <button onclick="toggledark()">Toggle Dark Mode!</button>
-
     <script>
       const darkmode = localStorage.getItem('darkmode');
+      const boardContainer = document.getElementById('boardContainer');
       if (darkmode == 'false') {
-        document.body.className == "";
+        boardContainer.className == "board-container";
       }
       else if (darkmode == 'true') {
-        document.body.className = "dark-mode";
+        boardContainer.className = "baord-container-dark";
       }
     </script>
 
