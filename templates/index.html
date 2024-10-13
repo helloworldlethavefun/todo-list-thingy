@@ -21,15 +21,6 @@
           "wdth" 100;
       }
     </style>
-    <script>
-      const darkmode = localStorage.getItem('darkmode');
-      if (darkmode == false) {
-        document.body.className == "";
-      }
-      else if (darkmode == true) {
-        document.body.className == "dark-mode";
-      }
-    </script>
   </head>
   <body class="">
     <h1>Welcome to TaskMate!</h1>
@@ -48,5 +39,15 @@
     <p>TaskMate is a free and open source todo list application written in python. The goal of the project is to provide a premium feeling todo list application, without the paywalls that others provide. I am hosting this online but I have also provided the project up on github for free download and the ability to host the application yourself if you wish and also allows you to modify and customize to your hearts content (provided you understand what you are doing :] )</p>
 
     <button onclick="toggledark()">Toggle Dark Mode!</button>
+
+    <script>
+      const darkmode = localStorage.getItem('darkmode');
+      if (darkmode == false) {
+        document.body.className == "";
+      }
+      else if (darkmode == true) {
+        document.body.className = "dark-mode";
+      }
+    </script>
   </body>
 </html>
