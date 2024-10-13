@@ -136,7 +136,7 @@ function createboard(kanbanName) {
     boardContainer.appendChild(deleteBoard);
     }
   };
-  xhttp.open("POST", "/list-api/v1/create-board", true);
+  xhttp.open("POST", "https://morganpiper.pythonanywhere.com/list-api/v1/create-board", true);
   xhttp.setRequestHeader("Content-type", "text/plain");
   xhttp.send(kanbanName);
 }
@@ -381,7 +381,7 @@ async function makeApiRequest(url, requestType = 'GET', contentType = null, cont
             }
         };
 
-        xhttp.open(requestType, 'http://127.0.0.1' + url, true);
+        xhttp.open(requestType, 'https://morganpiper.pythonanywhere.com' + url, true);
 
         // Set default content-type if none provided
         if (contentType === null) {
