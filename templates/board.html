@@ -71,8 +71,6 @@
       <button onclick="openListPopup()">New List</button>
     </div>
 
-    <input name="user_id" id="user_id" value="{{ user_id }}" type="hidden" style="position: absolute;">
-    
     <button onclick="toggledark()">Toggle Dark Mode!</button>
 
     <script>
@@ -84,5 +82,8 @@
         document.body.className = "dark-mode";
       }
     </script>
+
+    <input name="user_id" id="user_id" value="{{ user_id }}" type="hidden" style="position: absolute;">
+
   </body>
 </html>
