@@ -13,3 +13,17 @@ function toggledark() {
 		localStorage.setItem('darkmode', true);
 	}
 }
+
+
+function toggledarkboard() {
+	const boardContainer = document.getElementById('board-container');
+	if (boardContainer.className == 'board-container-dark') {
+		boardContainer.className = "board-container";
+		localStorage.setItem('darkmode', false);
+	}
+
+	else {
+		boardContainer.className = "board-container-dark";
+		localStorage.setItem('darkmode', true);
+	}
+}
