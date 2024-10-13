@@ -38,9 +38,9 @@ app.config['SECRET_KEY'] = os.urandom(12).hex()
 login_manager = LoginManager()
 login_manager.init_app(app)
 db = SQLAlchemy(model_class=Base)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://Flask@localhost/users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://MorganPiper:nywduq-4vYjwe-dohjeb@MorganPiper.mysql.pythonanywhere-services.com/MorganPiper$users'
 db.init_app(app)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "*"}})
 
 
 # create the password hasher to hash the passwords. Uses argon2 hashing algorithim
@@ -194,7 +194,7 @@ def remlist():
 @app.route('/list-api/v1/deleteboard', methods=['POST'])
 def deleteboard():
     data = request.get_json()
-    file = f'users/{data['UserId']}/{data['SelectedList']}'
+    file = f"users/{data['UserId']}/{data['SelectedList']}"
     os.remove(file)
     return 'success', 204
 
