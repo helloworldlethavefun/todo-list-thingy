@@ -5,7 +5,7 @@
 function toggledark() {
 	if (document.body.className == 'dark-mode') {
 		document.body.className = "";
-		localStorage.setItem('darkmode', true);
+		localStorage.setItem('darkmode', false);
 	}
 
 	else {
