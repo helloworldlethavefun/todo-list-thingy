@@ -23,10 +23,10 @@
     </style>
     <script>
       const darkmode = localStorage.getItem('darkmode');
-      if (darkmode == False) {
+      if (darkmode == false) {
         document.body.className == "";
       }
-      else {
+      else if (darkmode == true) {
         document.body.className == "dark-mode";
       }
     </script>
