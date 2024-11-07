@@ -38,7 +38,7 @@ app.config['SECRET_KEY'] = os.urandom(12).hex()
 login_manager = LoginManager()
 login_manager.init_app(app)
 db = SQLAlchemy(model_class=Base)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://MorganPiper:nywduq-4vYjwe-dohjeb@MorganPiper.mysql.pythonanywhere-services.com/MorganPiper$users'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'placeholder'
 db.init_app(app)
 CORS(app, resources={r"/*": {"origins": "*"}})
 
